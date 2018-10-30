@@ -3,51 +3,57 @@ require_relative "bin"
 module Kratos
   module Nmap
     include Kratos::Bin
-    attr_accessor :nmap_scripts
+    attr_accessor :nmap_scripts, :anon_setting
     NMAP_DEFAULT_PATH = '/usr/bin/nmap'
     SINGLE_SCANS = %w[basic_target_scan advanced_target_scan_t4 advanced_target_scan_t5 samba_exploit_scan fingerprint_webapp webapp_firewall_detect vulners_scripts vulscan_scripts full_scan list_vulscan list_vulscan_database list_vulners list_vulscan_database list_vulners list_nmap_scripts http_errors dns_brute_force exif_data]
     MULTI_SCANS = %w[basic_network_scan]
+
+    DEFAULT_ANON_SETTING = fa;se
+
+    def anon_setting
+      @anon_setting ||= DEFAULT_ANON_SETTING
+    end
 
     def nmap_location
       NMAP_DEFAULT_PATH
 
     end
 
-    def basic_network_scan(target, anon = false)
+    def basic_network_scan(target)
       nmap "-sP #{target}", anon: anon
     end
 
-    def basic_target_scan(target, anon = false)
+    def basic_target_scan(target)
       nmap "-p 1-65535 -sV -sS -T4 #{target}", anon: anon
     end
 
-    def advanced_target_scan_t4(target, anon = false)
+    def advanced_target_scan_t4(target)
       nmap "-v -p 1-65535 -sV -O -sS -T4 #{target}", anon: anon
     end
 
-    def advanced_target_scan_t5(target, anon = false)
+    def advanced_target_scan_t5(target)
       nmap "-v -p 1-65535 -sV -O -sS -T5 #{target}", anon: anon
     end
 
-    def samba_exploit_scan(target, anon = false)
+    def samba_exploit_scan(target)
       nmap "--script-args=unsafe=1 --script smb-check-vulns.nse -p 445 #{target}", anon: anon
     end
 
     # TODO: This is not implemented (extra script arg)
-    def script_scan(target, script, anon = false)
+    def script_scan(target, script)
       script = File.basename script, '.nse' if script.end_with? '.nse'
       nmap "-p80,443 --script #{script} #{target}", anon
     end
 
-    def fingerprint_webapp(target, anon = false)
+    def fingerprint_webapp(target)
       nmap "-p80,443 --script http-waf-fingerprint #{target}", anon: anon
     end
 
-    def webapp_firewall_detect(target, anon = false)
+    def webapp_firewall_detect(target)
       nmap "-p80,443 --script http-waf-detect --script-args='http-waf-detect.aggro,http-waf-detect.detectBodyChanges' #{target}", anon: anon
     end
 
-    def vulners_scripts(target, anon = false)
+    def vulners_scripts(target)
       nmap "--script nmap-vulners -sV  #{target}", anon: anon, export: 'vulners'
     end
 
@@ -60,7 +66,7 @@ module Kratos
       end
     end
 
-    def full_scan(target, anon = false)
+    def full_scan(target)
       target += '.csv' unless target.end_with? '.csv'
       nmap "--script nmap-vulners,vulscan -v --script-args vulscandb=scipvuldb.csv -sV ${target}", export: 'full'
     end
@@ -88,17 +94,21 @@ module Kratos
       nmap "--script-help='#{script}'"
     end
 
-    def http_errors(target, anon = false)
+    def http_errors(target)
       nmap "-p80,443 --script http-errors #{target}", anon: anon
     end
 
-    def dns_brute_force(target, anon = false)
+    def dns_brute_force(target)
       nmap "-p80,443 --script dns-brute #{target}", anon: anon
       #   nmap -p80,443 --script dns-brute --script-args dns-brute.threads=25,dns-brute.hostlist=/root/Desktop/custom-subdomain-wordlist.txt targetWebsite.com
     end
 
-    def exif_data(target, anon = false)
+    def exif_data(target)
       nmap "-p80,443 --script http-exif-spider #{target}", anon: anon
+    end
+    
+    def query_command(cmd, target, anon)
+      send nmap target, query: true
     end
 
     SCAN_DESCRIPTION = {

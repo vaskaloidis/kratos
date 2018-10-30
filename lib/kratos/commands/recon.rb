@@ -30,7 +30,7 @@ module Kratos
           config.target
           save_outcome = config.save!
           if save_outcome
-          prompt.ok "Target Save Succesful!"
+            prompt.ok "Target Save Succesful!"
           else
             prompt.error "Error saving target"
           end
@@ -73,18 +73,18 @@ module Kratos
             end
 
             while actively_scanning
-              scans = prompt.multi_select("Scan Mission:", choices)
+              scan_selected = prompt.select("Scan Mission:", choices)
 
-              if scans.include? 'exit'
+              if scan_selected == 'exit'
                 running = false
-              elsif scans.include? 'switch'
+              elsif scan_selected == 'switch'
                 actively_scanning = false
               else
-                scans.each do |scan|
+                scan_cmd = nmap scan_selected target, query: true
+                prompt.warn "CMD: #{scan_cmd}"
 
-                  prompt.warn "CMD: #{result.command}" # TODO: Fix thsi so it prints query of nmap command first
-
-                  result = send scan.to_sym, target, anon
+                if prompt.yes? "Execute?"
+                  result = send scan_selected.to_sym, target, anon
 
                   if result.success?
                     prompt.ok "Scan Successful!"
@@ -93,7 +93,8 @@ module Kratos
                     prompt.error "Scan error"
                     prompt.say result.error
                   end
-
+                else
+                  prompt.warn "Scan aborted"
                 end
               end
             end
