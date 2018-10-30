@@ -1,15 +1,8 @@
-require 'tty-command'
-
-
 require "kratos/version"
-require "kratos/recon"
-require "kratos/nmap"
-require "kratos/setup"
-require "kratos/attack"
-require "kratos/bin"
-require "kratos/main"
-
+require "kratos/kratos"
+require "kratos/config"
+require "kratos/util"
 
 module Kratos
-  # The Goods
+  # Your code goes here...
 end

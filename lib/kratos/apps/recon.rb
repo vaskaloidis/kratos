@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "nmap"
+require "bin"
+
 require "thor"
 require 'date'
 require 'tmpdir' # Not needed if you are using rails.
@@ -36,7 +39,6 @@ module Kratos
 
     desc "script_scan TARGET SCRIPT", "Scan using a specified nmap script"
 
-
     desc "list_vulscan", "List VulScan Scripts"
 
     desc "list_vulscan_database", "List VulScan Databases"
@@ -46,9 +48,10 @@ module Kratos
     desc "list_nmap_scripts", "List Nmap Scripts"
 
     desc "vulners_scripts TARGET", "Vulners Scan"
-      def vulners(target)
-        vulners_scripts target
-      end
+
+    def vulners(target)
+      vulners_scripts target
+    end
 
     desc "vulscan TARGET DATABASE=nil", "Vulscan scan all databases, (optional) scan specified vulscan database. list_vulscan to list databases"
 
@@ -58,9 +61,7 @@ module Kratos
 
     desc "full_scan TARGET", "Web-Application Full Scan"
 
-
     desc "http_errors TARGET", "HTTP-Errors Scan"
-
 
     desc "dns_brute_force TARGET", "DNS Brute Force Scan"
 
@@ -68,4 +69,4 @@ module Kratos
 
 
   end
-  end
+end
