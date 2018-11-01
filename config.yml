@@ -1,0 +1,51 @@
+target_data:
+  -projects:
+    - project: hydra
+      - name: pc-laptop-1
+      - name: pc-laptop-1
+      - name: pc-laptop-1
+      - name: pc-laptop-1
+    - project: scylla
+      - name: pc-laptop-1
+      - name: pc-laptop-1
+  -targets:
+    - ip: 123.456.7.88
+      website: bustedmugshots.com
+      name: bustedmugshots.com-server
+    - ip: 123.456.7.88
+      domain: mugshots.com.com
+      name: mugshots.com
+    - ip: 123.456.7.88
+      website: website.com
+      name: hydra
+    - ip: 123.456.7.88
+      domain: website.com
+      type: server
+    - ip: 123.456.7.88
+      website: website.com
+      os: linux
+      software: apache-http
+      type: server
+    - name: pc-laptop-1
+      website: website.com
+      os: windows-7
+      type: pc
+  - services:
+    -
+
+
+server_data:
+  - hosts:
+    - ip: 123.456.7.39
+      ssh_username: root
+      ssh_password: 23400sc87c9876
+      website: goldberlawfirm.net
+  - listeners:
+
+
+server_configs:
+  - proxy_routes:
+    - url: somewebsite.com/dir1?query=variable
+      destination: server:9123
+    - source: 123.456.7.7:21
+      destination: localhost:9122

@@ -3,7 +3,6 @@ require_relative 'shell_command'
 
 module Kratos
   module Bin
-    # include Kratos::Docker
     include Kratos::ShellCommand
     attr_accessor :anon
 
@@ -43,18 +42,12 @@ module Kratos
       end
     end
 
-    TARGET_OPTIONS = [:local, :docker]
-    TARGET = :local
+    def docker(cmd)
+      execute_cmd "docker #{cmd}"
+    end
 
-    def execute_cmd(cmd)
-      # Decide where to run the code
-
-      if TARGET == :local
-        shell_execute cmd
-      else
-        kali_docker cmd
-      end
-
+    def execute_cmd(cmd, **args)
+      shell_execute cmd, args
     end
 
 
